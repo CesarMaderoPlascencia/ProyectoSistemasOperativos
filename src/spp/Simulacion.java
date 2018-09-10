@@ -5,23 +5,35 @@
  */
 package spp;
 
+import static com.sun.javafx.tk.Toolkit.getToolkit;
 import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Cesar
  */
-public class Simulacion extends javax.swing.JFrame {
+public class Simulacion extends javax.swing.JFrame implements Runnable, ActionListener {
 
     /**
      * Creates new form Simulacion
      */
     public Simulacion() {
         initComponents();
-        
+        cronometro.setEnabled(false);
     }
     ArrayList<proceso> listaProcesos = new ArrayList<>();
+    ArrayList<proceso> listaEjecutando = new ArrayList<>();
+    ArrayList<proceso> listaTerminado = new ArrayList<>();
+    int contador = 1;
+    int lote = 1;
+    int auxLote = 0;
+    int tiempoTotal = 0;
+    Thread hilo;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -49,6 +61,14 @@ public class Simulacion extends javax.swing.JFrame {
         areaProceso = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         areaTerminado = new javax.swing.JTextArea();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        labelOperacion = new javax.swing.JLabel();
+        labelEspecial = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        labelTiempo = new javax.swing.JLabel();
+        cronometro = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,11 +82,34 @@ public class Simulacion extends javax.swing.JFrame {
 
         jLabel2.setText("Operacion");
 
-        comboOperador.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Suma", "Resta", "Multiplicacion", "Division", "Residuo", "Raiz", "Porcentaje" }));
+        comboOperador.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Suma", "Resta", "Multiplicacion", "Division", "Residuo", "Raiz Cuadrada", "Porcentaje" }));
+        comboOperador.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboOperadorActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Tiempo");
 
+        tiempoVida.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tiempoVidaKeyTyped(evt);
+            }
+        });
+
         jLabel4.setText("ID");
+
+        operadorUno.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                operadorUnoKeyTyped(evt);
+            }
+        });
+
+        operadorDos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                operadorDosKeyTyped(evt);
+            }
+        });
 
         botonAdd.setText("Añadir");
         botonAdd.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -74,8 +117,18 @@ public class Simulacion extends javax.swing.JFrame {
                 botonAddMouseClicked(evt);
             }
         });
+        botonAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonAddActionPerformed(evt);
+            }
+        });
 
         botonComenzar.setText("Comenzar");
+        botonComenzar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonComenzarActionPerformed(evt);
+            }
+        });
 
         areaAcumulado.setColumns(20);
         areaAcumulado.setRows(5);
@@ -89,86 +142,144 @@ public class Simulacion extends javax.swing.JFrame {
         areaTerminado.setRows(5);
         jScrollPane3.setViewportView(areaTerminado);
 
+        jLabel5.setText("Lotes en Espera");
+
+        jLabel6.setText("Lote en Ejecuccion");
+
+        jLabel7.setText("Lotes Terminados");
+
+        labelOperacion.setText("+");
+
+        labelEspecial.setText(" ");
+
+        jLabel8.setText("Tiempo total:");
+
+        labelTiempo.setText(" ");
+
+        cronometro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cronometroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(nombreProgramador, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                            .addComponent(tiempoVida))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(92, 92, 92)
+                                .addComponent(jLabel5)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(61, 61, 61)
-                                .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(124, 124, 124)
-                                .addComponent(jLabel2))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(183, 183, 183)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(410, 410, 410)
+                                .addComponent(jLabel7)
+                                .addGap(112, 112, 112))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3))
+                                .addGap(35, 35, 35)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nombreProgramador, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
+                                    .addComponent(tiempoVida)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(141, 141, 141)
-                                .addComponent(botonAdd))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                                .addComponent(botonAdd)))
+                        .addGap(81, 81, 81)
+                        .addComponent(labelEspecial)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addGap(40, 40, 40)
-                                .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(labelOperacion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(126, 126, 126)
+                        .addComponent(jLabel4)
+                        .addGap(40, 40, 40)
+                        .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(55, 55, 55))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(134, 134, 134)
+                .addComponent(labelTiempo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(nombreProgramador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel4)
-                    .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(nombreProgramador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(tiempoVida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tiempoVida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28)
                         .addComponent(botonAdd))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelOperacion)
+                                    .addComponent(labelEspecial)))))
+                    .addComponent(botonComenzar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel6))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3)
                     .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane3))
-                .addContainerGap(33, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(labelTiempo)
+                    .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31))
         );
 
         pack();
@@ -183,16 +294,307 @@ public class Simulacion extends javax.swing.JFrame {
         proceso auxProceso = new proceso();
         auxProceso.nombre = nombreProgramador.getText();
         auxProceso.operadorUno = Integer.parseInt(operadorUno.getText());
-        auxProceso.operadorDos = Integer.parseInt(operadorDos.getText());
+        if(comboOperador.getSelectedIndex() == 5){auxProceso.operadorDos = 0;}
+        else{auxProceso.operadorDos = Integer.parseInt(operadorDos.getText());}
         auxProceso.tiempoMaximo = Integer.parseInt(tiempoVida.getText());
+        auxProceso.esperaSeg = tiempoTotal;
+        tiempoTotal = tiempoTotal + Integer.parseInt(tiempoVida.getText());
         auxProceso.ID = idPrograma.getText();
-        auxProceso.operacion = comboOperador.getSelectedIndex();
-        System.out.println(auxProceso.operacion);
-        auxProceso.operacion();
-        System.out.println(auxProceso.resultado);
+        auxProceso.operacion(comboOperador.getSelectedIndex());
+        auxProceso.numeroProceso = contador;
+        
+        //System.out.println(auxProceso.operacion);
+        //auxProceso.operacion();
+        //System.out.println(auxProceso.resultado);
+        System.out.println(contador + " - " + lote);
+        auxProceso.lote = lote;
+        if((auxLote+4)==contador){lote++;auxLote = auxLote+4;}
+        //if(contador == 4){lote++;}
         listaProcesos.add(auxProceso);
+        contador++;
+        actualizar();
+        limpiar();
     }//GEN-LAST:event_botonAddMouseClicked
 
+    private void limpiar()
+    {
+        nombreProgramador.setText("");
+        tiempoVida.setText("");
+        operadorUno.setText("");
+        operadorDos.setText("");
+        idPrograma.setText("");
+    }
+    
+    
+    public void run(){
+        Integer minutos = 0 , segundos = 0, milesimas = 0, auxSegundos = 0;
+        //min es minutos, seg es segundos y mil es milesimas de segundo
+        String min="", seg="", mil="";
+        try
+        {
+            //Mientras cronometroActivo sea verdadero entonces seguira
+            //aumentando el tiempo
+            while( auxSegundos < tiempoTotal )
+            {
+                Thread.sleep( 1 );
+                //loteEjecutando(auxSegundos);
+                //Incrementamos 4 milesimas de segundo
+                milesimas += 1;
+
+                //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
+                //y las milesimas de segundo de nuevo a 0
+                if( milesimas == 1000 )
+                {
+                    milesimas = 0;
+                    segundos += 1;
+                    auxSegundos+= 1;
+                    loteEjecutando(auxSegundos);
+                    //Si los segundos llegan a 60 entonces aumenta 1 los minutos
+                    //y los segundos vuelven a 0
+                    if( segundos == 60 )
+                    {
+                        segundos = 0;
+                        minutos++;
+                    }
+                }
+
+                //Esto solamente es estetica para que siempre este en formato
+                //00:00:000
+                if( minutos < 10 ) min = "0" + minutos;
+                else min = minutos.toString();
+                if( segundos < 10 ) seg = "0" + segundos;
+                else seg = segundos.toString();
+
+                if( milesimas < 10 ) mil = "00" + milesimas;
+                else if( milesimas < 100 ) mil = "0" + milesimas;
+                else mil = milesimas.toString();
+
+                //Colocamos en la etiqueta la informacion
+                cronometro.setText( min + ":" + seg + ":" + mil );
+            }
+        }catch(Exception e){}
+        //Cuando se reincie se coloca nuevamente en 00:00:000
+    }
+    
+    public void iniciarCronometro() {
+        hilo = new Thread(this);
+        hilo.start();
+    }
+    
+    public void loteEjecutando(int seg)
+    {
+        System.out.println("Entra");
+
+        if(listaProcesos.size()!= 0)
+        {            
+            
+            if(listaProcesos.get(0).esperaSeg == seg)
+            {
+                if(listaEjecutando.size() != 0)
+                {
+                    proceso auxProceso = new proceso();
+                    auxProceso = listaEjecutando.get(0);
+                    auxProceso.esperaTotal = seg;
+                    listaTerminado.add(auxProceso);
+                    listaEjecutando.remove(0);
+                }
+                proceso auxProceso = new proceso();
+                auxProceso = listaProcesos.get(0);
+                auxProceso.esperaTotal = seg;
+                listaEjecutando.add(auxProceso);
+                listaProcesos.remove(0);
+            }
+        }
+        else
+        {
+            if(listaEjecutando.size() != 0)
+                {
+                    if(seg == tiempoTotal)
+                    {
+                        proceso auxProceso = new proceso();
+                        auxProceso = listaEjecutando.get(0);
+                        auxProceso.esperaTotal = seg;
+                        listaTerminado.add(auxProceso);
+                        listaEjecutando.remove(0);
+                    }
+                }
+        }
+        actualizar();
+        actualizarEjecutando();
+        actualizarTerminado();
+    }
+    
+    private void bloquear()
+    {
+        nombreProgramador.setEnabled(false);
+        tiempoVida.setEnabled(false);
+        operadorUno.setEnabled(false);
+        operadorDos.setEnabled(false);
+        idPrograma.setEnabled(false);
+        comboOperador.setEnabled(false);
+        botonAdd.setEnabled(false);
+        botonComenzar.setEnabled(false);
+        System.out.println("Bloqueado");
+    }
+    
+    private void comboOperadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboOperadorActionPerformed
+        // TODO add your handling code here:
+        if(comboOperador.getSelectedIndex() == 5)
+        {
+            operadorDos.setVisible(false);
+            labelEspecial.setVisible(true);
+            labelEspecial.setText(String.valueOf((char)8730));
+            labelOperacion.setVisible(false);
+        }
+        else{operadorDos.setVisible(true); labelEspecial.setVisible(false);labelOperacion.setVisible(true);}
+        
+        if(comboOperador.getSelectedIndex() == 0){labelOperacion.setText("+");labelEspecial.setVisible(false);}
+        if(comboOperador.getSelectedIndex() == 1){labelOperacion.setText("-");labelEspecial.setVisible(false);}
+        if(comboOperador.getSelectedIndex() == 2){labelOperacion.setText("x");labelEspecial.setVisible(false);}
+        if(comboOperador.getSelectedIndex() == 3){labelOperacion.setText("/");labelEspecial.setVisible(false);}
+        if(comboOperador.getSelectedIndex() == 4){labelOperacion.setText("/");labelEspecial.setVisible(true);labelEspecial.setText("Residuo de:");}
+        if(comboOperador.getSelectedIndex() == 6){labelOperacion.setText("%");labelEspecial.setVisible(false);}
+        
+    }//GEN-LAST:event_comboOperadorActionPerformed
+
+    
+    private void tiempoVidaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tiempoVidaKeyTyped
+        // TODO add your handling code here:
+        char validar = evt.getKeyChar();
+        if(Character.isLetter(validar))
+        {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_tiempoVidaKeyTyped
+
+    private void operadorUnoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_operadorUnoKeyTyped
+        // TODO add your handling code here:
+        char validar = evt.getKeyChar();
+        if(Character.isLetter(validar))
+        {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_operadorUnoKeyTyped
+
+    private void operadorDosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_operadorDosKeyTyped
+        // TODO add your handling code here:
+        char validar = evt.getKeyChar();
+        if(Character.isLetter(validar))
+        {
+            getToolkit().beep();
+            evt.consume();
+        }
+    }//GEN-LAST:event_operadorDosKeyTyped
+
+    private void botonComenzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonComenzarActionPerformed
+        // TODO add your handling code here:
+        if(contador != 1){
+            bloquear();
+            loteEjecutando(0);
+            iniciarCronometro();
+            //Cronometro c=new Cronometro(); //Intancio la clase
+            //c.start();
+        }
+    }//GEN-LAST:event_botonComenzarActionPerformed
+
+    private void cronometroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cronometroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cronometroActionPerformed
+
+    private void botonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonAddActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonAddActionPerformed
+    
+    private void actualizar()
+    {
+        int ward = 0;
+        String Acumulado = "";
+        int tama = listaProcesos.size();
+        //Acumulado = Acumulado + "Lote 1 \n";
+        //areaAcumulado.setText("Lote 1 \n");
+        for(int i = 0; i < tama; i++)
+        {
+            proceso auxProceso = new proceso();
+            auxProceso = listaProcesos.get(i);
+            
+            Acumulado = Acumulado + "\n";
+            if (ward != auxProceso.lote)
+            {
+                ward = auxProceso.lote;
+                Acumulado = Acumulado + "******************************\n";
+                Acumulado = Acumulado +"Lote " + ward + "\n\n";
+            }
+            
+            Acumulado = Acumulado + "Programador: " + auxProceso.nombre + "\n";
+            Acumulado = Acumulado + "ID: " + auxProceso.ID + "\n";
+            Acumulado = Acumulado + "Tiempo: " + auxProceso.tiempoMaximo + "\n";
+            Acumulado = Acumulado + "Operacion: " + auxProceso.operadorUno + " " + auxProceso.operacion + " " + auxProceso.operadorDos + "\n";
+        }       
+            
+        areaAcumulado.setText(Acumulado);
+        
+    }
+    
+    private void actualizarEjecutando()
+    {
+        int ward = 0;
+        String Acumulado = "";
+        int tama = listaEjecutando.size();
+        //Acumulado = Acumulado + "Lote 1 \n";
+        //areaAcumulado.setText("Lote 1 \n");
+        for(int i = 0; i < tama; i++)
+        {
+            proceso auxProceso = new proceso();
+            auxProceso = listaEjecutando.get(i);
+            
+            Acumulado = Acumulado + "\n";
+            if (ward != auxProceso.lote)
+            {
+                ward = auxProceso.lote;
+                Acumulado = Acumulado + "******************************\n";
+                Acumulado = Acumulado +"Lote " + ward + "\n\n";
+            }
+
+            Acumulado = Acumulado + "Programador: " + auxProceso.nombre + "\n";
+            Acumulado = Acumulado + "ID: " + auxProceso.ID + "\n";
+            Acumulado = Acumulado + "Tiempo: " + auxProceso.tiempoMaximo + "\n";
+            Acumulado = Acumulado + "Operacion: " + auxProceso.operadorUno + " " + auxProceso.operacion + " " + auxProceso.operadorDos + "\n";
+        }
+        Acumulado = Acumulado + "En Ejecuccion\n\n";
+        areaProceso.setText(Acumulado);
+    }
+    
+    private void actualizarTerminado()
+    {
+        int ward = 0;
+        String Acumulado = "";
+        int tama = listaTerminado.size();
+        //Acumulado = Acumulado + "Lote 1 \n";
+        //areaAcumulado.setText("Lote 1 \n");
+        for(int i = 0; i < tama; i++)
+        {
+            proceso auxProceso = new proceso();
+            auxProceso = listaTerminado.get(i);
+            
+            Acumulado = Acumulado + "\n";
+            if (ward != auxProceso.lote)
+            {
+                ward = auxProceso.lote;
+                Acumulado = Acumulado + "******************************\n";
+                Acumulado = Acumulado +"Lote " + ward + "\n\n";
+            }
+
+            Acumulado = Acumulado + "Programador: " + auxProceso.nombre + "\n";
+            Acumulado = Acumulado + "ID: " + auxProceso.ID + "\n";
+            Acumulado = Acumulado + "Espera Total: " + auxProceso.esperaTotal + "\n";
+            Acumulado = Acumulado + "Operacion: " + auxProceso.operadorUno + " " + auxProceso.operacion + " " + auxProceso.operadorDos + "\n";
+            Acumulado = Acumulado + "Resultado: " + auxProceso.resultado + "\n";
+        }
+        areaTerminado.setText(Acumulado);  
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -222,6 +624,7 @@ public class Simulacion extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new Simulacion().setVisible(true);
             }
@@ -235,17 +638,37 @@ public class Simulacion extends javax.swing.JFrame {
     private javax.swing.JButton botonAdd;
     private javax.swing.JButton botonComenzar;
     private javax.swing.JComboBox comboOperador;
+    private javax.swing.JTextField cronometro;
     private javax.swing.JTextField idPrograma;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel labelEspecial;
+    private javax.swing.JLabel labelOperacion;
+    private javax.swing.JLabel labelTiempo;
     private javax.swing.JTextField nombreProgramador;
     private javax.swing.JTextField operadorDos;
     private javax.swing.JTextField operadorUno;
     private javax.swing.JTextField tiempoVida;
     // End of variables declaration//GEN-END:variables
+
+    void sleep(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+
 }

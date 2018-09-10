@@ -12,20 +12,37 @@ package spp;
 public class proceso {
     String nombre;
     String operacion;
-    int operadorUno;
-    int operadorDos;
+    float operadorUno;
+    float operadorDos;
     int tiempoMaximo;
     String ID;
     float resultado;
+    int lote;
+    int numeroProceso;
+    int esperaSeg;
+    int esperaTotal = 0;
 
-    public void operacion()
+    public void operacion(int num)
     {
-        if("Suma".equals(operacion)){resultado = operadorUno + operadorDos;}
-        if("Resta".equals(operacion)){resultado = operadorUno - operadorDos;}
-        if("Multiplicacion".equals(operacion)){resultado = operadorUno * operadorDos;}
-        if("Division".equals(operacion)){resultado = operadorUno/operadorDos;}
-        if("Residuo".equals(operacion)){resultado = operadorUno % operadorDos;}
-        if("Raiz".equals(operacion)){resultado = (float)Math.sqrt(operadorUno);}
-        if("Porcentaje".equals(operacion)){resultado = (operadorDos/100)*operadorUno;}
+        if(num == 0){resultado = operadorUno + operadorDos;}
+        if(num == 1){resultado = operadorUno - operadorDos;}
+        if(num == 2){resultado = operadorUno * operadorDos;}
+        if(num == 3){resultado = (float)operadorUno/operadorDos;}
+        if(num == 4){resultado = operadorUno % operadorDos;}
+        if(num == 5){resultado = (float)Math.sqrt(operadorUno);}
+        if(num == 6){resultado = (float)(operadorDos/100)*operadorUno;}
+        tipoOperacion(num);
     }
+    
+    public void tipoOperacion(int num)
+    {
+        if(num == 0){operacion = "Suma";}
+        if(num == 1){operacion = "Resta";}
+        if(num == 2){operacion = "Multiplicacion";}
+        if(num == 3){operacion = "Division";}
+        if(num == 4){operacion = "Residuo";}
+        if(num == 5){operacion = "Raiz";}
+        if(num == 6){operacion = "Porcentaje";}
+    }
+   
 }
