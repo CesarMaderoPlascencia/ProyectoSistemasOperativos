@@ -5,7 +5,6 @@
  */
 package spp;
 
-import static com.sun.javafx.tk.Toolkit.getToolkit;
 import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,6 +32,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
     int lote = 1;
     int auxLote = 0;
     int tiempoTotal = 0;
+    int restart = 0;
     Thread hilo;
     /**
      * This method is called from within the constructor to initialize the form.
@@ -169,24 +169,6 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(92, 92, 92)
-                                .addComponent(jLabel5)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 190, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(183, 183, 183)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(410, 410, 410)
-                                .addComponent(jLabel7)
-                                .addGap(112, 112, 112))))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
@@ -215,12 +197,33 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
                                 .addComponent(labelOperacion)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(126, 126, 126)
+                        .addGap(55, 55, 55)
                         .addComponent(jLabel4)
                         .addGap(40, 40, 40)
                         .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(50, 50, 50)
+                        .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(87, 87, 87)
+                                .addComponent(jLabel5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(144, 144, 144)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(128, 128, 128))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(298, 298, 298)
+                                .addComponent(jLabel7)
+                                .addGap(224, 224, 224)))))
                 .addGap(55, 55, 55))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -234,52 +237,58 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(nombreProgramador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(tiempoVida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
-                        .addComponent(botonAdd))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(nombreProgramador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel3)
+                                    .addComponent(tiempoVida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(28, 28, 28)
+                                .addComponent(botonAdd))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(21, 21, 21)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelOperacion)
-                                    .addComponent(labelEspecial)))))
-                    .addComponent(botonComenzar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel6))
+                                    .addComponent(jLabel2)
+                                    .addComponent(comboOperador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(operadorUno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(operadorDos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(labelOperacion)
+                                            .addComponent(labelEspecial)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(4, 4, 4)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel4)
+                                            .addComponent(idPrograma, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGap(18, 18, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botonComenzar, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel6)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 590, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1))
+                .addGap(70, 70, 70)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(labelTiempo)
                     .addComponent(cronometro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                .addGap(0, 0, 0))
         );
 
         pack();
@@ -290,32 +299,59 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
     }//GEN-LAST:event_nombreProgramadorActionPerformed
 
     private void botonAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAddMouseClicked
+
         // TODO add your handling code here:
-        proceso auxProceso = new proceso();
-        auxProceso.nombre = nombreProgramador.getText();
-        auxProceso.operadorUno = Integer.parseInt(operadorUno.getText());
-        if(comboOperador.getSelectedIndex() == 5){auxProceso.operadorDos = 0;}
-        else{auxProceso.operadorDos = Integer.parseInt(operadorDos.getText());}
-        auxProceso.tiempoMaximo = Integer.parseInt(tiempoVida.getText());
-        auxProceso.esperaSeg = tiempoTotal;
-        tiempoTotal = tiempoTotal + Integer.parseInt(tiempoVida.getText());
-        auxProceso.ID = idPrograma.getText();
-        auxProceso.operacion(comboOperador.getSelectedIndex());
-        auxProceso.numeroProceso = contador;
-        
-        //System.out.println(auxProceso.operacion);
-        //auxProceso.operacion();
-        //System.out.println(auxProceso.resultado);
-        System.out.println(contador + " - " + lote);
-        auxProceso.lote = lote;
-        if((auxLote+4)==contador){lote++;auxLote = auxLote+4;}
-        //if(contador == 4){lote++;}
-        listaProcesos.add(auxProceso);
-        contador++;
-        actualizar();
-        limpiar();
+        if(comprovar() == false){
+            proceso auxProceso = new proceso();
+            auxProceso.nombre = nombreProgramador.getText();
+            auxProceso.operadorUno = Integer.parseInt(operadorUno.getText());
+            if(comboOperador.getSelectedIndex() == 5){auxProceso.operadorDos = 0;}
+            else{auxProceso.operadorDos = Integer.parseInt(operadorDos.getText());}
+            auxProceso.tiempoMaximo = Integer.parseInt(tiempoVida.getText());
+            auxProceso.esperaSeg = tiempoTotal;
+            tiempoTotal = tiempoTotal + Integer.parseInt(tiempoVida.getText());
+            auxProceso.ID = idPrograma.getText();
+            auxProceso.operacion(comboOperador.getSelectedIndex());
+            auxProceso.numeroProceso = contador;
+
+            //System.out.println(auxProceso.operacion);
+            //auxProceso.operacion();
+            //System.out.println(auxProceso.resultado);
+            System.out.println(contador + " - " + lote);
+            auxProceso.lote = lote;
+            if((auxLote+4)==contador){lote++;auxLote = auxLote+4;}
+            //if(contador == 4){lote++;}
+            listaProcesos.add(auxProceso);
+            contador++;
+            actualizar();
+            limpiar();
+        }
     }//GEN-LAST:event_botonAddMouseClicked
 
+    public boolean comprovar()
+    {
+        int tama = listaProcesos.size();
+        if(tama != 0)
+        {
+            for(int i = 0; i < tama; i++)
+            {
+                proceso auxProceso = new proceso();
+                auxProceso = listaProcesos.get(i);
+                if(auxProceso.ID.equals(idPrograma.getText())){return true;}
+            }
+        }
+        if(Integer.parseInt(tiempoVida.getText())<1)return true;
+        if(comboOperador.getSelectedIndex() == 3)
+        {
+            if(Integer.parseInt(operadorDos.getText()) == 0)return true;
+        }
+        if(comboOperador.getSelectedIndex() == 4)
+        {
+            if(Integer.parseInt(operadorDos.getText()) == 0)return true;
+        }
+        return false;
+    }
+    
     private void limpiar()
     {
         nombreProgramador.setText("");
@@ -327,19 +363,23 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
     
     
     public void run(){
-        Integer minutos = 0 , segundos = 0, milesimas = 0, auxSegundos = 0;
+        Integer minutos = 0 , segundos = 0, milesimas = 0, limiteSeg = 0;
+        Integer auxMinutos = 0, auxSegundos = 0, auxMilesimas = 0;
         //min es minutos, seg es segundos y mil es milesimas de segundo
         String min="", seg="", mil="";
+        String auxMin="", auxSeg="", auxMil="";
+
         try
         {
             //Mientras cronometroActivo sea verdadero entonces seguira
             //aumentando el tiempo
-            while( auxSegundos < tiempoTotal )
+            while( limiteSeg < tiempoTotal )
             {
-                Thread.sleep( 1 );
+                Thread.sleep( 50 );
                 //loteEjecutando(auxSegundos);
                 //Incrementamos 4 milesimas de segundo
-                milesimas += 1;
+                milesimas += 50;
+                auxMilesimas += 50;
 
                 //Cuando llega a 1000 osea 1 segundo aumenta 1 segundo
                 //y las milesimas de segundo de nuevo a 0
@@ -348,12 +388,14 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
                     milesimas = 0;
                     segundos += 1;
                     auxSegundos+= 1;
-                    loteEjecutando(auxSegundos);
+                    limiteSeg += 1;
                     //Si los segundos llegan a 60 entonces aumenta 1 los minutos
                     //y los segundos vuelven a 0
                     if( segundos == 60 )
                     {
                         segundos = 0;
+                        auxSegundos=0;
+                        
                         minutos++;
                     }
                 }
@@ -370,6 +412,15 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
                 else mil = milesimas.toString();
 
                 //Colocamos en la etiqueta la informacion
+                loteEjecutando(Integer.parseInt(min),Integer.parseInt(seg),Integer.parseInt(mil));
+                if(restart == 1)
+                {
+                    auxMinutos = 0;
+                    auxSegundos = 0;
+                    auxMilesimas = 0;
+                }
+                restart = 0;
+                actualizarEjecutando(auxMinutos,auxSegundos,auxMilesimas);
                 cronometro.setText( min + ":" + seg + ":" + mil );
             }
         }catch(Exception e){}
@@ -381,7 +432,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
         hilo.start();
     }
     
-    public void loteEjecutando(int seg)
+    public void loteEjecutando(int min, int seg,int mil)
     {
         System.out.println("Entra");
 
@@ -403,6 +454,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
                 auxProceso.esperaTotal = seg;
                 listaEjecutando.add(auxProceso);
                 listaProcesos.remove(0);
+                restart = 1;
             }
         }
         else
@@ -420,7 +472,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
                 }
         }
         actualizar();
-        actualizarEjecutando();
+        
         actualizarTerminado();
     }
     
@@ -492,7 +544,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
         // TODO add your handling code here:
         if(contador != 1){
             bloquear();
-            loteEjecutando(0);
+            loteEjecutando(0,0,0);
             iniciarCronometro();
             //Cronometro c=new Cronometro(); //Intancio la clase
             //c.start();
@@ -537,7 +589,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
         
     }
     
-    private void actualizarEjecutando()
+    private void actualizarEjecutando(int a, int b, int c)
     {
         int ward = 0;
         String Acumulado = "";
@@ -561,6 +613,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
             Acumulado = Acumulado + "ID: " + auxProceso.ID + "\n";
             Acumulado = Acumulado + "Tiempo: " + auxProceso.tiempoMaximo + "\n";
             Acumulado = Acumulado + "Operacion: " + auxProceso.operadorUno + " " + auxProceso.operacion + " " + auxProceso.operadorDos + "\n";
+            Acumulado = Acumulado + "Tiempo: " + a + ":" + b + ":" + c + "\n";
         }
         Acumulado = Acumulado + "En Ejecuccion\n\n";
         areaProceso.setText(Acumulado);
@@ -588,6 +641,7 @@ public class Simulacion extends javax.swing.JFrame implements Runnable, ActionLi
 
             Acumulado = Acumulado + "Programador: " + auxProceso.nombre + "\n";
             Acumulado = Acumulado + "ID: " + auxProceso.ID + "\n";
+            Acumulado = Acumulado + "Tiempo de vida: " + auxProceso.tiempoMaximo + "\n";
             Acumulado = Acumulado + "Espera Total: " + auxProceso.esperaTotal + "\n";
             Acumulado = Acumulado + "Operacion: " + auxProceso.operadorUno + " " + auxProceso.operacion + " " + auxProceso.operadorDos + "\n";
             Acumulado = Acumulado + "Resultado: " + auxProceso.resultado + "\n";

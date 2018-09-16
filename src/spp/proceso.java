@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -20,6 +20,8 @@ public class proceso {
     int lote;
     int numeroProceso;
     int esperaSeg;
+    int esperaMin;
+    int esperaMil;
     int esperaTotal = 0;
 
     public void operacion(int num)
